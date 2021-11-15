@@ -4,6 +4,8 @@ const path = require("path");
 const express = require("express");
 const app = new express();
 
+const { accounts, users, writeJSON } = require("./data.js");
+
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 
@@ -14,13 +16,11 @@ const accountData = fs.readFileSync(
     path.join(__dirname, "json", "accounts.json"),
     "utf8"
 );
-const accounts = JSON.parse(accountData);
 
 const userData = fs.readFileSync(
     path.join(__dirname, "json", "users.json"),
     "utf8"
 );
-const users = JSON.parse(userData);
 
 app.get("/", (req, res) =>
     res.render("index", { title: "Account Summary", accounts: accounts })
@@ -47,6 +47,7 @@ app.post("/transfer", (req, res) => {
         accountsJSON,
         "utf8"
     );
+    writeJSON();
     res.render("transfer", { message: "Transfer Completed" });
 });
 
@@ -62,6 +63,7 @@ app.post("/payment", (req, res) => {
         accountsJSON,
         "utf8"
     );
+    writeJSON();
     res.render("payment", {
         message: "Payment Successful",
         account: accounts.credit,
